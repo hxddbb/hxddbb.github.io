@@ -1,0 +1,76 @@
+1.检查模板配置是否有误，第一天下面内容写错，一直打不开视图页面
+
+2.第二天，也一直打不开视图页面，加入了插件，不知道是什么原因，自己改了project的jdk自己的版本，解决不能打开视图页面，不知道是不是这个原因
+可能是插件影响了jdk
+
+day02,导入jquery.js报错，以为是导入的问题，然后在yml文件中去掉path server.servlet.context-path=/
+#  myhospital    新报错，mapper xml文件中的错误，自己重新设置了sql语句 解决问题
+
+beetl初始模板视图
+//    @Bean(name = "beetlConfig")
+//    public BeetlGroupUtilConfiguration getBeetlGroupUtilConfiguration() {
+//        BeetlGroupUtilConfiguration beetlGroupUtilConfiguration = new BeetlGroupUtilConfiguration();
+//        ClasspathResourceLoader classpathResourceLoader = new ClasspathResourceLoader();
+//        beetlGroupUtilConfiguration.setResourceLoader(classpathResourceLoader);
+//        beetlGroupUtilConfiguration.init();
+//        return beetlGroupUtilConfiguration;
+//    }
+//    @Bean(name = "beetlViewResolver")
+//    public BeetlSpringViewResolver getBeetlSpringViewResolver(
+//            @Qualifier("beetlConfig") BeetlGroupUtilConfiguration beetlGroupUtilConfiguration) {
+//        BeetlSpringViewResolver beetlSpringViewResolver = new BeetlSpringViewResolver();
+//        beetlSpringViewResolver.setPrefix("/templates/");
+//        beetlSpringViewResolver.setSuffix(".html");
+//        beetlSpringViewResolver.setContentType("text/html;charset=UTF-8");
+//        beetlSpringViewResolver.setOrder(0);
+//        beetlSpringViewResolver.setConfig(beetlGroupUtilConfiguration);
+//        return beetlSpringViewResolver;
+//    }
+
+第四天：beetl在config层里面无法运行 检查propeties文件
+#模板位置声明，以便找到前端页面
+错误写法，要么是这种写法过时，要么是yml和propetie有区别
+beetl:
+  templatesPath: /templates/
+正确写法
+beetl.enabled=true
+beetl.templatesPath=/templates/
+大概率是yml和原始yml（propreties）的区别 原始的一般是 .  yml一般是：
+
+day07 Description:  Failed to configure a DataSource: 'url' attribute is not specified and no embedded dat 异常，检查target文件里 yml文件是否编译进去
+
+day8-day10，找了很久的大问题，由于原本是beetlsql加basemapper，分页插件是Lambdaquery，PageQuery..
+mybatis 没有，所以要换至mybatisplus，里面叫Page,使用mybatisplus,basemapper
+第八天换了mybatisplus 一直用不了basemapper的公用方法，一整天判断是以为xml文件和basemapper的方法有冲突，因为里面也封装了sql语句，第九天发现
+basemapper有两个包，一个是beetl 的一个是Mybatisplus的，所以我就换了Mybatisplus的，并且tablename是mybatisplus,table(name=)是beetl的，很多注释不一样
+分页类名也不一样，所以在使用一定要去看源码的返回值，以及属性名，在最后，前端的属性名还是beetl basemapper方法里面的属性名导致一直报错
+第十天纠正前端属性名找到问题
+
+第十天晚上：坑：mybatisplus 的 queryWrapper为条件查询，basemapper公开的方法没有like模糊查询，所以要实例化querywrapper
+       条件不能作为全局变量，否则条件会受影响，我有试过当作全局变量，结果sql语句在第二次使用的时候和第一次使用时进行了拼接
+
+第十一天，也是找了一天的bug,还是像之前那样判断用户输入的数据和数据库当中是否重复，判断用户输入的身份证，开启条件查询，查询数据库身份证字段
+判断用户输入的是否存在，不存在就插入数据，后台改了很多代码都行不通，最终在前端 data.code写错了，写为data.message，改完之后发现，查询字段
+为空也无法添加插入数据，最好不要返回list！查询就按一条算，一般也都是查询一条，返回lIst，判断用户输入为空也有可能不走增加的程序，返回list就算
+没查到数据也不走空的if判断，最后，插入数据主键一般不是自己写，是插入自己排序的，mybatisplus的雪花算法自动递增，要在实体类的属性上加上自动
+递增主键的注解
+public class lbdoctor {
+    @TableId(value = "id",type = IdType.AUTO)
+    private Integer id;
+
+
+
+- SELECT r.id,r.rent,t.name FROM tenants  t  right join rooms r on r.tenant_id=t.id
+
+select r.id,r.rent,t.name FROM rooms  r left join tenants t on r.tenant_id=t.id
+
+//在多表查询 有可能会涉及到计算，如果返回bigdecimal，xml文件中一定不能用对象去接受返回值，否则无法输出，其实用对象接受是一种不好的习惯
+但我都用的对象也没发生什么异常，比如查主键，字段，都没什么太大的问题，返回什么类型 java对象对应封装的属性就进行接受，但是要注意，最好返回什么
+就用什么类型（resultType）接受 ，如果返回多个类型再用对象去接，bigdecimal比较特殊，最好分开进行sql使用
+
+
+
+//在使用一些工具前一定要查看文档，不同的工具对应的属性不一样，比如mybatisplus分页属性和beetlsql 属性不同导致数据无法显示到前端；
+
+
+https://github.com/hxddbb/wincy1999.git

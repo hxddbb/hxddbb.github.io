@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hxddbb.dao.lbhospitalizationMapper">
+    <resultMap id="BaseResultMap" type="com.hxddbb.entity.lbhospitalization">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="floor" jdbcType="VARCHAR" property="floor" />
+        <result column="bed" jdbcType="VARCHAR" property="bed" />
+        <result column="door" jdbcType="VARCHAR" property="door" />
+        <result column="medical_name" jdbcType="VARCHAR" property="medicalName" />
+        <result column="patient_id" jdbcType="INTEGER" property="patientId" />
+        <result column="intime" jdbcType="DATE" property="intime" />
+        <result column="outtime" jdbcType="DATE" property="outtime" />
+    </resultMap>
+    <select id="selectonepatient" parameterType="com.hxddbb.entity.lbhospitalization" resultMap="BaseResultMap">
+        SELECT
+            h.*,p.name AS patientName
+        FROM
+            lb_hospitalization h
+        LEFT JOIN lb_patient p ON h.patient_id = p.id where p.user_id = #{userid}
+    </select>
+
+    <select id="selectlist" resultType="com.hxddbb.entity.lbhospitalization" >
+        SELECT
+           h.*,p.name AS patientName
+        FROM
+            lb_hospitalization h
+        LEFT JOIN lb_patient p ON h.patient_id = p.id where 1=1
+        <if test="hsp.patientName!=null and hsp.patientName!='' ">
+            and p.name like concat('%',#{hsp.patientName},'%')
+        </if>
+         <if test="hsp.intime!=null and hsp.intime!=''">
+             and h.intime =#{hsp.intime}
+         </if>
+    </select>
+
+    <select id="selectall" resultType="com.hxddbb.entity.lbhospitalization">
+          SELECT
+        	h.*,p.name AS patientName
+        FROM
+            lb_hospitalization h
+        LEFT JOIN lb_patient p ON h.patient_id = p.id
+    </select>
+
+</mapper>

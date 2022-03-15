@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hxddbb.dao.lbappointmentMapper">
+
+<!--    按照预约表主键查询某个预约-->
+    <select id="selectyi" resultType="com.hxddbb.entity.lbappointment">
+         SELECT
+        	a.*,p.name AS patientname,d.name AS doctorname,d.department AS department
+        FROM
+        	lb_appointment a
+        LEFT JOIN lb_patient p ON a.patient_id = p.id
+        LEFT JOIN lb_doctor d ON d.id = a.doctor_id where a.id = #{id}
+    </select>
+
+<select id="selectListByDoctor" resultType="com.hxddbb.entity.lbappointment">
+      SELECT
+         a.*,p.name AS patientname,d.name AS doctorname,d.department AS department
+        FROM
+        	lb_appointment a
+        LEFT JOIN lb_patient p ON a.patient_id = p.id
+        LEFT JOIN lb_doctor d ON d.id = a.doctor_id where 1=1
+        <if test="app.patientName!=null and app.patientName!=''">
+            and p.name like concat('%',#{app.patientName},'%')
+        </if>
+        <if test="app.time!=null and app.time!=''">
+            and a.time like concat('%',#{app.time},'%')
+        </if>
+        <if test="app.userId!=null and app.userId!=''">
+         and d.user_id= #{app.userId}
+         </if>
+
+</select>
+    <!--    分页模糊查询-->
+    <select id="selectlist" resultType="com.hxddbb.entity.lbappointment">
+              SELECT
+        	a.*,p.name AS patientname,d.name AS doctorname,d.department AS department
+        FROM
+        	lb_appointment a
+        LEFT JOIN lb_patient p ON a.patient_id = p.id
+        LEFT JOIN lb_doctor d ON d.id = a.doctor_id where 1=1
+        <if test="app.patientName!=null and app.patientName!=''">
+            and p.NAME LIKE concat('%',#{app.patientName},'%')
+        </if>
+
+        <if test="app.doctorName!=null and app.doctorName!=''">
+            and d.NAME LIKE concat('%',#{app.doctorName},'%')
+        </if>
+        <if test="app.userId!=null and app.userId!=''">
+            and p.user_id = #{app.userId}
+        </if>
+
+    </select>
+
+<select id="selectpatient" resultType="com.hxddbb.entity.lbappointment">
+    select * from lb_appointment where patient_id=#{patientid}
+</select>
+</mapper>

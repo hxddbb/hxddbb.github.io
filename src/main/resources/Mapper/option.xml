@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hxddbb.dao.lboptionMapper">
+    <select id="selectall" resultType="com.hxddbb.entity.lboption">
+        select * from lb_option
+    </select>
+
+<select id="getTotalPrice"  resultType="java.math.BigDecimal" >
+     select sum(price) from lb_option where id =
+     <foreach collection="list" item="ids" index="id"  separator="," >
+      #{ids} </foreach>
+</select>
+
+<!--    <select id="getTotalPrice"  resultType="com.hxddbb.entity.lboption">-->
+<!--        select sum(price) from lb_option  as o-->
+<!--        <where> <if test="list!=null and list!=''">-->
+<!--         and o.id in-->
+<!--        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">-->
+<!--            #{ids}-->
+<!--            </foreach>-->
+<!--           </if>-->
+<!--        </where>-->
+<!--    </select>-->
+
+
+<!--    对于mybatis的参数类型是集合数组的时候进行查询。-->
+
+<!--    第一种：参数list使用mybatis的标签-->
+<!--    1-->
+<!--    2-->
+<!--    3-->
+<!--    4-->
+<!--    5-->
+<!--    6-->
+<!--    7-->
+<!--    8-->
+<!--    9-->
+<!--    SELECT  * FROM  TABLE_NAME AS a-->
+<!--    <where>-->
+<!--    　　<if test="constomerGradeArray!=null and constomerGradeArray.length!=0">-->
+<!--    　　　　AND a.constomer_grade in-->
+<!--    　　　　<foreach collection="constomerGradeArray" item="extraId" index="i" open="(" separator="," close=")">-->
+<!--    　　　　　　#{extraId}-->
+<!--    　　　　</foreach>-->
+<!--    　　</if>-->
+<!--    <where>-->
+<!--    　　-->
+
+<!--    参数讲解的：-->
+
+<!--    　　collection：需要循环的集合-->
+
+<!--    　　item：每次循环的参数名字-->
+
+<!--    　　index：索引（0开始）-->
+
+<!--    　　separator：分隔符-->
+
+<!--    　　open：整个循环开始的分隔符-->
+
+<!--    　　close：整个循环结束的分隔符-->
+
+<!--    第二种：参数string的数组需要处理参数形成extraIds=('1','2','3')这种类型，需要拼接字符-->
+<!--    注意在mybatis中使用的是${},不能使用#{},否则报错-->
+
+<!--    SELECT  * FROM  TABLE_NAME AS a WHEREa.id not in ${extraIds}-->
+
+<!--    一小段示类代码：-->
+
+<!--    1-->
+<!--    2-->
+<!--    3-->
+<!--    4-->
+<!--    5-->
+<!--    6-->
+<!--    7-->
+<!--    8-->
+<!--    9-->
+<!--    String  extraIds = "1,2,3,4,5";-->
+<!--    String[] extraIdArray = extraIds.split(",");-->
+<!--    extraIds= "";-->
+<!--    for (String extraId : extraIdArray) {-->
+<!--    　　if (extraId != null && !"".equals(extraId)) {-->
+<!--    　　　　extraIds += ",'" + extraId + "'";-->
+<!--    　　}-->
+<!--    }-->
+<!--    extraIds   =    "(" + extraIds.substring(1) + ")";-->
+
+
+<!--    拼接后：（'1','2','3','4','5'）-->
+
+</mapper>

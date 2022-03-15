@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hxddbb.dao.lbseekMapper">
+    <resultMap id="BaseResultMap" type="com.hxddbb.entity.lbseek">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="describes" jdbcType="VARCHAR" property="describes" />
+        <result column="illname" jdbcType="VARCHAR" property="illname" />
+        <result column="drugs" jdbcType="VARCHAR" property="drugs" />
+        <result column="options" jdbcType="VARCHAR" property="options" />
+        <result column="days" jdbcType="VARCHAR" property="days" />
+        <result column="price" jdbcType="DECIMAL" property="price" />
+        <result column="patient_id" jdbcType="INTEGER" property="patientId" />
+        <result column="appointment_id" jdbcType="INTEGER" property="appointmentId" />
+    </resultMap>
+
+    <select id="selectappointmentid" resultMap="BaseResultMap">
+        select * from lb_seek where appointment_id = #{appointmentId}
+    </select>
+
+    <update id="updatedrugs" parameterType="com.hxddbb.entity.lbseek" >
+        update lb_seek  set  drugs=#{ids.drugs} where id=#{ids.id}
+    </update>
+
+    <insert id="insertprice" parameterType="com.hxddbb.entity.lbseek" >
+        insert into lb_seek
+        (id,describes,illname,options,days,price,patient_id,appointment_id)
+        values (null,#{ids.describes},#{ids.illname},#{ids.options},#{ids.days},#{ids.price,jdbcType=DECIMAL},
+        #{ids.patientId},#{ids.appointmentId})
+
+
+    </insert>
+</mapper>

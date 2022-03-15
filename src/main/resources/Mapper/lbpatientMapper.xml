@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hxddbb.dao.lbpatientMapper">
+<!--  <association>-->
+<!--    -->
+<!--  </association>-->
+
+  <select id="selectByPrimaryKey" resultType="com.hxddbb.entity.lbpatient">
+
+  select *
+  from lb_patient
+  where cert_id = #{sfzid}
+</select>
+
+
+<select id="selectlist"
+        resultType="com.hxddbb.entity.lbpatient">
+
+SELECT
+p.*,d.name as doctorName
+FROM
+lb_patient p
+LEFT JOIN lb_appointment a ON p.appointment_id = a.id
+LEFT JOIN lb_doctor d ON a.doctor_id = d.id where 1=1
+<if test="lbt.name!=null and lbt.name!=''">
+	and p.name=#{lbt.name}
+</if>
+
+<if test="lbt.certId!=null and lbt.certId!=''">
+	and p.cert_id=#{lbt.certId}
+</if>
+
+<if test="lbt.certId!=null and lbt.certId!=''">
+	and a.doctor_id=#{lbt.doctorId}
+</if>
+
+</select>
+
+  <select id="selectall" resultType="com.hxddbb.entity.lbpatient">
+      select
+    id,
+	name,
+	age,
+	cert_id,
+	sex,
+	address,
+	hospitalization_id,
+	drugsids,
+	isout,
+	appointment_id,
+	user_id  from lb_patient
+
+  </select >
+<select id="selectpatient" resultType="com.hxddbb.entity.lbpatient">
+	SELECT * FROM lb_patient WHERE user_id=#{userId}
+</select>
+
+	<update id="updatauser">
+		UPDATE lb_patient  SET  user_id=#{lbt.userId} where cert_id=#{lbt.certId}
+	</update>
+</mapper>
